@@ -1,0 +1,1 @@
+SQL injection in list_users() in app.py: the sort_by argument is concatenated into the ORDER BY clause of the query.
