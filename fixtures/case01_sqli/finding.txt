@@ -1,0 +1,1 @@
+SQL injection in find_user() in app.py: the username argument is concatenated directly into the SQL query text.

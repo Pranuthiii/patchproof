@@ -1,0 +1,1 @@
+Path traversal in read_note() in app.py: the name argument is joined to base_dir without validation, so files outside base_dir may be readable.
