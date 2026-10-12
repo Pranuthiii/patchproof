@@ -1,4 +1,5 @@
 """Single-shot patcher: ask a Nemotron model to fix app.py, then verify the result."""
+import ast
 import os
 import re
 import shutil
@@ -26,8 +27,18 @@ client = OpenAI(
 
 
 def extract_code(text):
-    m = re.search(FENCE + r"(?:python)?\s*\n(.*?)" + FENCE, text or "", re.DOTALL)
-    return m.group(1).strip() + "\n" if m else None
+    text = text or ""
+    m = re.search(FENCE + r"(?:python)?\s*\n(.*?)" + FENCE, text, re.DOTALL)
+    if m:
+        return m.group(1).strip() + "\n"
+    stripped = text.strip()
+    if stripped:
+        try:
+            ast.parse(stripped)  # bare code with no fences: accept only if valid Python
+            return stripped + "\n"
+        except SyntaxError:
+            pass
+    return None
 
 
 def main(case_dir, model_key):

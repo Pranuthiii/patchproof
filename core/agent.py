@@ -10,13 +10,20 @@ from verifier import run_in_sandbox, verify
 AI_TEST = "test_ai_security.py"
 
 
+LOG_DIR = None
+
+
 def ask(model, prompt, label):
     r = client.chat.completions.create(
-        model=model, max_tokens=8000,
+        model=model, max_tokens=16000,
         messages=[{"role": "user", "content": prompt}],
     )
-    print(f"[{label}] tokens: {r.usage.total_tokens}")
-    return extract_code(r.choices[0].message.content)
+    choice = r.choices[0]
+    print(f"[{label}] tokens: {r.usage.total_tokens} finish: {choice.finish_reason}")
+    if LOG_DIR is not None:
+        (LOG_DIR / f"raw_{label}.txt").write_text(
+            f"finish_reason: {choice.finish_reason}\n\n{choice.message.content}\n")
+    return extract_code(choice.message.content)
 
 
 def main(case_dir, model_key):
@@ -26,6 +33,8 @@ def main(case_dir, model_key):
     if base.exists():
         shutil.rmtree(base)
     orig, patched, oracle = base / "original", base / "patched", base / "oracle"
+    global LOG_DIR
+    LOG_DIR = base
 
     # The hidden oracle test and the finding are kept out of the workspace.
     shutil.copytree(case, orig, ignore=shutil.ignore_patterns(
