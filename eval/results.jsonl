@@ -23,8 +23,8 @@
 {"case": "case02_path_traversal", "model": "ultra", "run": 1, "outcome": "verified", "tokens": 7278, "seconds": 21}
 {"case": "case02_path_traversal", "model": "ultra", "run": 2, "outcome": "verified", "tokens": 5265, "seconds": 16}
 {"case": "case02_path_traversal", "model": "ultra", "run": 3, "outcome": "verified", "tokens": 7403, "seconds": 24}
-{"case": "case03_prefix_traversal", "model": "lightning", "run": 1, "outcome": "test_rejected", "tokens": 16473, "seconds": 58}
-{"case": "case03_prefix_traversal", "model": "lightning", "run": 2, "outcome": "test_rejected", "tokens": 16473, "seconds": 58}
+{"case": "case03_prefix_traversal", "model": "lightning", "run": 1, "outcome": "truncated", "tokens": 16473, "seconds": 58}
+{"case": "case03_prefix_traversal", "model": "lightning", "run": 2, "outcome": "truncated", "tokens": 16473, "seconds": 58}
 {"case": "case03_prefix_traversal", "model": "lightning", "run": 3, "outcome": "verified", "tokens": 17608, "seconds": 63}
 {"case": "case03_prefix_traversal", "model": "nano", "run": 1, "outcome": "verified", "tokens": 7356, "seconds": 24}
 {"case": "case03_prefix_traversal", "model": "nano", "run": 2, "outcome": "verified", "tokens": 6833, "seconds": 24}
@@ -35,8 +35,8 @@
 {"case": "case03_prefix_traversal", "model": "ultra", "run": 1, "outcome": "verified", "tokens": 6652, "seconds": 18}
 {"case": "case03_prefix_traversal", "model": "ultra", "run": 2, "outcome": "verified", "tokens": 5136, "seconds": 13}
 {"case": "case03_prefix_traversal", "model": "ultra", "run": 3, "outcome": "verified", "tokens": 4860, "seconds": 14}
-{"case": "case04_orderby_injection", "model": "lightning", "run": 1, "outcome": "test_rejected", "tokens": 16506, "seconds": 59}
-{"case": "case04_orderby_injection", "model": "lightning", "run": 2, "outcome": "test_rejected", "tokens": 16506, "seconds": 60}
+{"case": "case04_orderby_injection", "model": "lightning", "run": 1, "outcome": "truncated", "tokens": 16506, "seconds": 59}
+{"case": "case04_orderby_injection", "model": "lightning", "run": 2, "outcome": "truncated", "tokens": 16506, "seconds": 60}
 {"case": "case04_orderby_injection", "model": "lightning", "run": 3, "outcome": "test_rejected", "tokens": 9890, "seconds": 35}
 {"case": "case04_orderby_injection", "model": "nano", "run": 1, "outcome": "test_rejected", "tokens": 5817, "seconds": 22}
 {"case": "case04_orderby_injection", "model": "nano", "run": 2, "outcome": "test_rejected", "tokens": 7394, "seconds": 28}

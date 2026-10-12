@@ -23,6 +23,9 @@ def ask(model, prompt, label):
     if LOG_DIR is not None:
         (LOG_DIR / f"raw_{label}.txt").write_text(
             f"finish_reason: {choice.finish_reason}\n\n{choice.message.content}\n")
+    if choice.finish_reason == "length":
+        print(f"[{label}] TRUNCATED: reply hit the token limit, so it is not used")
+        return None
     return extract_code(choice.message.content)
 
 

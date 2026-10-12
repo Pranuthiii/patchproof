@@ -17,6 +17,8 @@ RESULTS = Path("eval/results.jsonl")
 def classify(out):
     if "SandboxError" in out:
         return "infra_error"
+    if "TRUNCATED" in out:
+        return "truncated"
     if "VERDICT: VERIFIED" in out:
         return "verified"
     if "VERDICT: FALSE FIX" in out:
