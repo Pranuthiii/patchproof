@@ -1,0 +1,12 @@
+{"case": "case04_orderby_injection", "model": "lightning", "run": 4, "outcome": "truncated", "tokens": 16595, "seconds": 60}
+{"case": "case04_orderby_injection", "model": "lightning", "run": 5, "outcome": "truncated", "tokens": 16595, "seconds": 61}
+{"case": "case04_orderby_injection", "model": "lightning", "run": 6, "outcome": "truncated", "tokens": 16595, "seconds": 61}
+{"case": "case04_orderby_injection", "model": "nano", "run": 4, "outcome": "truncated", "tokens": 16595, "seconds": 52}
+{"case": "case04_orderby_injection", "model": "nano", "run": 5, "outcome": "verified", "tokens": 8929, "seconds": 28}
+{"case": "case04_orderby_injection", "model": "nano", "run": 6, "outcome": "test_rejected", "tokens": 4849, "seconds": 14}
+{"case": "case04_orderby_injection", "model": "super", "run": 4, "outcome": "verified", "tokens": 4904, "seconds": 20}
+{"case": "case04_orderby_injection", "model": "super", "run": 5, "outcome": "verified", "tokens": 5434, "seconds": 23}
+{"case": "case04_orderby_injection", "model": "super", "run": 6, "outcome": "test_rejected", "tokens": 3268, "seconds": 14}
+{"case": "case04_orderby_injection", "model": "ultra", "run": 4, "outcome": "verified", "tokens": 6092, "seconds": 18}
+{"case": "case04_orderby_injection", "model": "ultra", "run": 5, "outcome": "verified", "tokens": 6665, "seconds": 21}
+{"case": "case04_orderby_injection", "model": "ultra", "run": 6, "outcome": "verified", "tokens": 7648, "seconds": 25}
