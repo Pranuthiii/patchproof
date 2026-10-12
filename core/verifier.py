@@ -42,7 +42,7 @@ def verify(original_dir, patched_dir, security_module="test_security"):
     checks.append(("Security test FAILS on original code (flaw proven)", flaw, out))
 
     code, out = run_in_sandbox(patched_dir, ["-v", security_module])
-    fixed = code == 0 and "Ran 1 test" in out
+    fixed = code == 0 and "OK" in out
     checks.append(("Security test PASSES on patched code", fixed, out))
 
     code, out = run_in_sandbox(patched_dir, ["-v"])
