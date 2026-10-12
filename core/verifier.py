@@ -7,6 +7,10 @@ from pathlib import Path
 IMAGE = "python:3.11-slim"
 
 
+class SandboxError(RuntimeError):
+    """Docker itself failed. This is an infrastructure problem, not a test result."""
+
+
 def run_in_sandbox(folder, unittest_args):
     """Run unittest inside a locked Docker box: no network, read-only code, limits."""
     cmd = [
@@ -18,7 +22,10 @@ def run_in_sandbox(folder, unittest_args):
     ]
     try:
         r = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
-        return r.returncode, r.stdout + r.stderr
+        out = r.stdout + r.stderr
+        if r.returncode == 125 or "Cannot connect to the Docker daemon" in out:
+            raise SandboxError("Docker failed (not a test result): " + out[-300:])
+        return r.returncode, out
     except subprocess.TimeoutExpired:
         return 124, "TIMEOUT: tests took longer than 60 seconds"
 
