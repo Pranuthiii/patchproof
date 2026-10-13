@@ -1,0 +1,12 @@
+{"case": "case04_orderby_injection", "model": "lightning", "run": 1, "outcome": "verified", "tokens": 25594, "seconds": 139}
+{"case": "case04_orderby_injection", "model": "lightning", "run": 2, "outcome": "verified", "tokens": 13642, "seconds": 95}
+{"case": "case04_orderby_injection", "model": "lightning", "run": 3, "outcome": "truncated", "tokens": 33976, "seconds": 200}
+{"case": "case04_orderby_injection", "model": "nano", "run": 1, "outcome": "test_rejected", "tokens": 22675, "seconds": 178}
+{"case": "case04_orderby_injection", "model": "nano", "run": 2, "outcome": "test_rejected", "tokens": 12368, "seconds": 87}
+{"case": "case04_orderby_injection", "model": "nano", "run": 3, "outcome": "test_rejected", "tokens": 19077, "seconds": 142}
+{"case": "case04_orderby_injection", "model": "super", "run": 1, "outcome": "verified", "tokens": 8134, "seconds": 42}
+{"case": "case04_orderby_injection", "model": "super", "run": 2, "outcome": "verified", "tokens": 4104, "seconds": 20}
+{"case": "case04_orderby_injection", "model": "super", "run": 3, "outcome": "verified", "tokens": 7778, "seconds": 33}
+{"case": "case04_orderby_injection", "model": "ultra", "run": 1, "outcome": "verified", "tokens": 5838, "seconds": 22}
+{"case": "case04_orderby_injection", "model": "ultra", "run": 2, "outcome": "verified", "tokens": 7184, "seconds": 24}
+{"case": "case04_orderby_injection", "model": "ultra", "run": 3, "outcome": "other_error", "tokens": 6236, "seconds": 24}
