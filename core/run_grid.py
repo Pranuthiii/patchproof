@@ -1,6 +1,7 @@
 """Run the agent repeatedly on every case/model and log one result per run."""
 import argparse
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -11,7 +12,9 @@ from pathlib import Path
 
 CASES = ["case01_sqli", "case02_path_traversal"]
 MODELS = ["lightning", "nano", "super", "ultra"]
-RESULTS = Path("eval/results.jsonl")
+RESULTS = Path(os.environ.get("PATCHPROOF_RESULTS", "eval/results.jsonl"))
+AGENT = os.environ.get("PATCHPROOF_AGENT", "core/agent.py")
+GRID_DIR = Path(os.environ.get("PATCHPROOF_GRIDDIR", "runs/grid"))
 
 
 def classify(out):
@@ -44,7 +47,7 @@ def run_one(case, model, idx):
     t0 = time.time()
     try:
         p = subprocess.run(
-            [sys.executable, "core/agent.py", f"fixtures/{case}", model],
+            [sys.executable, AGENT, f"fixtures/{case}", model],
             capture_output=True, text=True, timeout=900)
         out = p.stdout + p.stderr
         outcome = classify(out)
@@ -53,7 +56,7 @@ def run_one(case, model, idx):
     tokens = sum(int(n) for n in re.findall(r"tokens: (\d+)", out))
     src = Path("runs") / f"agent_{case}_{model}"
     if src.exists():
-        dst = Path("runs/grid") / f"{case}_{model}_{idx}"
+        dst = GRID_DIR / f"{case}_{model}_{idx}"
         if dst.exists():
             shutil.rmtree(dst)
         shutil.copytree(src, dst)
