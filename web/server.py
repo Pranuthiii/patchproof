@@ -70,6 +70,27 @@ def diff_html(a, b):
     return "<pre>" + "".join(out) + "</pre>"
 
 
+def summary_html():
+    from collections import defaultdict
+    stats = defaultdict(lambda: [0, 0, 0])  # verified, valid runs, false fixes
+    for r in load_runs():
+        if r["outcome"] == "infra_error":
+            continue
+        k = (r["src"], r["model"])
+        stats[k][1] += 1
+        stats[k][0] += r["outcome"] == "verified"
+        stats[k][2] += r["outcome"] == "false_fix"
+    rows = "".join(
+        f"<tr><td>{SOURCES[src][0]}</td><td>{model}</td><td>{v}/{n}</td><td>{ff}</td></tr>"
+        for (src, model), (v, n, ff) in sorted(stats.items()))
+    return ("<h2>Results so far</h2><table><tr><th>agent</th><th>model</th>"
+            "<th>verified</th><th>false fixes</th></tr>" + rows + "</table>"
+            "<p class=mut>Small samples from a handful of hand-built cases, not a benchmark "
+            "leaderboard. The loop agent was only run on one case, so its numbers are not "
+            "comparable with the single-shot agent's. A false fix means the AI's own checks "
+            "passed but a hidden test showed the flaw remained. Ultra was available when its runs were made but is no longer listed on the account (checked Oct 13, 2026). The two false fixes are one distinct patch returned twice. Truncated means the model hit the 16,000-token output limit set by the test harness.</p><h2>All runs</h2>")
+
+
 @app.route("/")
 def index():
     rows = []
@@ -80,8 +101,8 @@ def index():
             f"<td>{r['run']}</td><td>{badge(r['outcome'])}</td><td>{r['tokens']}</td>"
             f"<td><a href='{url}'>view</a></td></tr>")
     body = ("<h1>PatchProof</h1><p class=mut>AI fixes that show their receipts. "
-            "Every run below was judged by a verifier and a hidden oracle test.</p>"
-            "<table><tr><th>agent</th><th>case</th><th>model</th><th>run</th>"
+            "Runs that produced a patch were judged by a verifier and a hidden oracle test the AI never saw. Runs that ended earlier never reached the oracle.</p>"
+            "" + summary_html() + "<table><tr><th>agent</th><th>case</th><th>model</th><th>run</th>"
             "<th>outcome</th><th>tokens</th><th></th></tr>" + "".join(rows) + "</table>")
     return page("PatchProof runs", body)
 
