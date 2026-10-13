@@ -57,6 +57,37 @@ def read(path):
     return path.read_text() if path.exists() else None
 
 
+DEMO = ROOT / "demo_runs"
+
+CAPTIONS = {
+    "single/case01_sqli_super_2": "Verified. The AI's attack test failed on the vulnerable code, the patch passed it, and the hidden oracle confirmed the fix.",
+    "single/case03_prefix_traversal_super_2": "False fix. The patch uses a plain startswith check, so a sibling folder such as files_private still passes. The AI's own test only tried ../secret.txt, so it passed, but the hidden oracle failed the patch.",
+    "single/case03_prefix_traversal_lightning_1": "Truncated. The model's reasoning hit the 16,000-token output limit before it finished a test, so there is no usable test or patch.",
+    "loop/case04_orderby_injection_super_2": "Retry rescued the run. The first test only checked that an unknown column raises ValueError, which is not an injection test, and was rejected. The second attempt used a weaker username-DESC test. The hidden oracle, which tries canary payloads, confirmed the final patch.",
+    "loop/case04_orderby_injection_nano_2": "Rejected after a retry. Neither attempt produced a test that failed cleanly on the vulnerable code, so the run stopped before any patch.",
+}
+
+
+def run_dir(src, case, model, idx):
+    name = f"{case}_{model}_{idx}"
+    d = SOURCES[src][2] / name
+    if d.exists():
+        return d
+    d = DEMO / ("loop" if src == 0 else "single") / name
+    return d if d.exists() else None
+
+
+def featured_html():
+    items = []
+    for key, text in CAPTIONS.items():
+        kind, name = key.split("/")
+        case, model, idx = name.rsplit("_", 2)
+        src = 0 if kind == "loop" else 1
+        url = f"/run/{src}/{case}/{model}/{idx}"
+        items.append(f"<li><a href='{url}'>{html.escape(name)}</a> <span class=mut>({kind} agent)</span><br>{html.escape(text)}</li>")
+    return "<h2>Featured runs</h2><ul>" + "".join(items) + "</ul>"
+
+
 def diff_html(a, b):
     out = []
     for line in difflib.unified_diff(a.splitlines(), b.splitlines(),
@@ -96,13 +127,14 @@ def index():
     rows = []
     for r in load_runs():
         url = f"/run/{r['src']}/{r['case']}/{r['model']}/{r['run']}"
+        link = f"<a href='{url}'>view</a>" if run_dir(r["src"], r["case"], r["model"], r["run"]) else ""
         rows.append(
             f"<tr><td>{SOURCES[r['src']][0]}</td><td>{r['case']}</td><td>{r['model']}</td>"
             f"<td>{r['run']}</td><td>{badge(r['outcome'])}</td><td>{r['tokens']}</td>"
-            f"<td><a href='{url}'>view</a></td></tr>")
+            f"<td>{link}</td></tr>")
     body = ("<h1>PatchProof</h1><p class=mut>AI fixes that show their receipts. "
             "Runs that produced a patch were judged by a verifier and a hidden oracle test the AI never saw. Runs that ended earlier never reached the oracle.</p>"
-            "" + summary_html() + "<table><tr><th>agent</th><th>case</th><th>model</th><th>run</th>"
+            "" + featured_html() + summary_html() + "<table><tr><th>agent</th><th>case</th><th>model</th><th>run</th>"
             "<th>outcome</th><th>tokens</th><th></th></tr>" + "".join(rows) + "</table>")
     return page("PatchProof runs", body)
 
@@ -113,8 +145,8 @@ def detail(src, case, model, idx):
                 and r["model"] == model and r["run"] == idx), None)
     if rec is None:
         abort(404)
-    d = SOURCES[src][2] / f"{case}_{model}_{idx}"
-    if not d.exists():
+    d = run_dir(src, case, model, idx)
+    if d is None:
         abort(404)
     before = read(d / "original" / "app.py")
     after = read(d / "patched" / "app.py")
@@ -122,6 +154,9 @@ def detail(src, case, model, idx):
     body = (f"<p><a href='/'>&larr; all runs</a></p><h1>{case} / {model} / run {idx}</h1>"
             f"<p>{badge(rec['outcome'])} <span class=mut>{rec['tokens']} tokens, "
             f"{rec['seconds']}s, {SOURCES[src][0]}</span></p>")
+    cap = CAPTIONS.get(f"{'loop' if src == 0 else 'single'}/{case}_{model}_{idx}")
+    if cap:
+        body += "<p>" + html.escape(cap) + "</p>"
     body += "<h2>Attack test written by the AI</h2>"
     body += ("<pre>" + html.escape(ai_test) + "</pre>") if ai_test else "<p class=mut>No test was saved.</p>"
     body += "<h2>Patch</h2>"
