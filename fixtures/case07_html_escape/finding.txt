@@ -1,1 +1,1 @@
-HTML injection (XSS) in render_profile_link() in app.py: the name and url arguments are inserted into HTML without escaping, so a quote or angle bracket can break out of the attribute or element.
+HTML injection (XSS) in render_profile_link() in app.py: the name and url arguments are inserted into HTML without escaping, so a quote or angle bracket can break out of the attribute or element, and the url argument can use a javascript: scheme.
