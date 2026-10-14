@@ -15,10 +15,13 @@ def run_in_sandbox(folder, unittest_args):
     """Run unittest inside a locked Docker box: no network, read-only code, limits."""
     cmd = [
         "docker", "run", "--rm", "--network", "none",
-        "--memory", "256m", "--cpus", "1",
+        "--memory", "256m", "--cpus", "1", "--pids-limit", "128",
+        "--read-only", "--tmpfs", "/tmp:rw,nosuid,size=64m",
+        "--cap-drop", "ALL", "--security-opt", "no-new-privileges",
+        "--user", "65534:65534",
         "-e", "PYTHONDONTWRITEBYTECODE=1",
         "-v", f"{Path(folder).resolve()}:/work:ro", "-w", "/work",
-        IMAGE, "python", "-m", "unittest", *unittest_args,
+        IMAGE, "timeout", "45", "python", "-m", "unittest", *unittest_args,
     ]
     try:
         r = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
