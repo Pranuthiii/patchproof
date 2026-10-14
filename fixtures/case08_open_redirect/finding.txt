@@ -1,0 +1,1 @@
+Open redirect in safe_redirect_target() in app.py: the target argument is returned without validation, so a link can send users to an attacker-controlled site.
