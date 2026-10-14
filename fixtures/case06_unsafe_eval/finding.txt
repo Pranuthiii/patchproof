@@ -1,0 +1,1 @@
+Unsafe eval in parse_setting() in app.py: the text argument is passed straight to eval(), so arbitrary Python expressions can run.
