@@ -1,0 +1,1 @@
+Command injection in count_lines() in app.py: the path argument is concatenated into a shell command that is run with shell=True.
