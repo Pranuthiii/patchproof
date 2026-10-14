@@ -5,6 +5,9 @@ import sys
 from pathlib import Path
 
 from patcher import FENCE, MODELS, client, extract_code
+import os
+TEMPERATURE = os.environ.get('PATCHPROOF_TEMPERATURE')
+EXTRA = {'temperature': float(TEMPERATURE)} if TEMPERATURE else {}
 from web_context import fetch_context
 from verifier import run_in_sandbox, verify
 
@@ -19,6 +22,7 @@ def ask(model, prompt, label):
     r = client.chat.completions.create(
         model=model, max_tokens=16000,
         messages=[{"role": "user", "content": prompt}],
+        **EXTRA,
     )
     choice = r.choices[0]
     print(f"[{label}] tokens: {r.usage.total_tokens} finish: {choice.finish_reason}")
