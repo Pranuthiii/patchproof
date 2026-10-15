@@ -112,6 +112,17 @@ def findings_html():
     )
 
 
+def runs_note_html():
+    return ("<h2>Earlier experiment runs</h2>"
+            "<p class='mut'>These pages come from the first experiments: a single-shot agent "
+            "(the AI writes its own attack test, then one patch, no retries) on cases 01 to 04, "
+            "and a loop agent run only on case 04. They ran at the API's default temperature, "
+            "where Super sometimes returned identical replies, so some repeats are not "
+            "independent. Ultra was available when its runs were made but is no longer listed "
+            "on the account (checked Oct 13, 2026). Truncated means the model hit the "
+            "16,000-token output limit set by the test harness.</p>")
+
+
 def diff_html(a, b):
     out = []
     for line in difflib.unified_diff(a.splitlines(), b.splitlines(),
@@ -158,7 +169,7 @@ def index():
             f"<td>{link}</td></tr>")
     body = ("<h1>PatchProof</h1><p class=mut>AI fixes that show their receipts. "
             "Runs that produced a patch were judged by a verifier and a hidden oracle test the AI never saw. Runs that ended earlier never reached the oracle.</p>"
-            "" + findings_html() + heatmap_html() + comparison_html() + featured_html() + summary_html() + "<table><tr><th>agent</th><th>case</th><th>model</th><th>run</th>"
+            "" + findings_html() + heatmap_html() + comparison_html() + featured_html() + runs_note_html() + "<table><tr><th>agent</th><th>case</th><th>model</th><th>run</th>"
             "<th>outcome</th><th>tokens</th><th></th></tr>" + "".join(rows) + "</table>")
     return page("PatchProof runs", body)
 
