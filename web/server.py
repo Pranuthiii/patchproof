@@ -6,6 +6,8 @@ from pathlib import Path
 
 from flask import Flask, abort
 
+from charts import CHART_CSS, comparison_html, heatmap_html
+
 ROOT = Path(__file__).resolve().parent.parent
 SOURCES = [
     ("loop agent", ROOT / "eval/results_loop.jsonl", ROOT / "runs/grid_loop"),
@@ -45,7 +47,7 @@ def load_runs():
 def page(title, body):
     return ("<!doctype html><meta charset=utf-8>"
             "<meta name=viewport content='width=device-width,initial-scale=1'>"
-            "<title>" + html.escape(title) + "</title><style>" + CSS + "</style>" + body)
+            "<title>" + html.escape(title) + "</title><style>" + CSS + CHART_CSS + "</style>" + body)
 
 
 def badge(outcome):
@@ -86,6 +88,28 @@ def featured_html():
         url = f"/run/{src}/{case}/{model}/{idx}"
         items.append(f"<li><a href='{url}'>{html.escape(name)}</a> <span class=mut>({kind} agent)</span><br>{html.escape(text)}</li>")
     return "<h2>Featured runs</h2><ul>" + "".join(items) + "</ul>"
+
+
+def findings_html():
+    return (
+        "<h2>What this project found</h2><ul>"
+        "<li><b>One-shot fixes can hide real flaws.</b> Four NVIDIA Nemotron models patched code "
+        "in a single call with no test. On the common flaws (cases 01, 02, 04, 05, 06), 99 of 100 "
+        "patches were verified. On open redirect (case 08), all 20 patches passed the ordinary "
+        "tests and failed a hidden oracle test.</li>"
+        "<li><b>A hidden oracle catches what ordinary tests miss.</b> Across cases 03, 07 and 08 "
+        "it flagged patches that looked correct and were not.</li>"
+        "<li><b>The retry loop with an AI-written test did not help in these experiments.</b> "
+        "Super and Ultra on five cases, five runs each: 33/50 verified against 36/50 one-shot, "
+        "with overlapping 95% intervals, at about ten times the tokens.</li>"
+        "<li><b>Why:</b> the AI-written attack tests cover attacks the model already knows. "
+        "The case 08 tests we inspected did not include the ///evil.test form the oracle uses.</li>"
+        "<li><b>What verified means.</b> In this benchmark it means the AI's test, the existing "
+        "tests and a hidden oracle all passed. On real code there is no hidden oracle, so a "
+        "verdict is only as strong as the AI-written test.</li></ul>"
+        "<p class='mut'>Small samples: five runs per cell, eight hand-built cases. "
+        "These are measurements of this setup, not a general benchmark.</p>"
+    )
 
 
 def diff_html(a, b):
@@ -134,7 +158,7 @@ def index():
             f"<td>{link}</td></tr>")
     body = ("<h1>PatchProof</h1><p class=mut>AI fixes that show their receipts. "
             "Runs that produced a patch were judged by a verifier and a hidden oracle test the AI never saw. Runs that ended earlier never reached the oracle.</p>"
-            "" + featured_html() + summary_html() + "<table><tr><th>agent</th><th>case</th><th>model</th><th>run</th>"
+            "" + findings_html() + heatmap_html() + comparison_html() + featured_html() + summary_html() + "<table><tr><th>agent</th><th>case</th><th>model</th><th>run</th>"
             "<th>outcome</th><th>tokens</th><th></th></tr>" + "".join(rows) + "</table>")
     return page("PatchProof runs", body)
 
