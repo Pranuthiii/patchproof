@@ -1,0 +1,31 @@
+<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><title>case03_prefix_traversal lightning 1</title><style>
+:root{--bg:#fff;--fg:#1a1a1a;--mut:#666;--line:#ddd;--ok:#1a7f37;--bad:#cf222e;--warn:#9a6700;--add:#dafbe1;--del:#ffebe9;--code:#f6f8fa}
+@media (prefers-color-scheme:dark){:root{--bg:#111;--fg:#e8e8e8;--mut:#999;--line:#333;--ok:#3fb950;--bad:#f85149;--warn:#d29922;--add:#12261e;--del:#3b1519;--code:#1a1a1a}}
+body{font:15px/1.5 system-ui,sans-serif;background:var(--bg);color:var(--fg);max-width:960px;margin:0 auto;padding:20px}
+a{color:inherit}
+table{border-collapse:collapse;width:100%}
+td,th{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left}
+.b{padding:2px 8px;border-radius:10px;font-size:13px;border:1px solid currentColor}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--warn)}
+pre{background:var(--code);padding:12px;overflow-x:auto;border-radius:6px;font-size:13px}
+.add{background:var(--add)}.del{background:var(--del)}
+.mut{color:var(--mut)}
+
+.heat{border-collapse:separate;border-spacing:4px;width:100%}
+.heat th{font-weight:600;font-size:13px;color:var(--mut,#666);text-align:center;padding:4px}
+.heat th.row{text-align:left}
+.heat td.cell{text-align:center;padding:10px 4px;border-radius:6px;color:#fff;font-weight:600;min-width:84px}
+.heat td.cell small{display:block;font-weight:400;opacity:.9;font-size:11px}
+.heat td.none{text-align:center;color:var(--mut,#666)}
+.bars .row{display:flex;align-items:center;gap:12px;margin:10px 0}
+.bars .name{width:200px;font-size:14px}
+.bars .track{flex:1;background:var(--code,#f1f1f1);border-radius:6px;height:26px;position:relative}
+.bars .fill{height:100%;border-radius:6px;background:var(--ok,#1a7f37)}
+.bars .val{width:200px;font-size:13px;color:var(--mut,#666)}
+</style><p><a href='../../../../../index.html'>&larr; all runs</a></p><h1>case03_prefix_traversal / lightning / run 1</h1><p><span class='b warn'>truncated</span> <span class=mut>16473 tokens, 58s, single-shot agent</span></p><p>Truncated. The model&#x27;s reasoning hit the 16,000-token output limit before it finished a test, so there is no usable test or patch.</p><h2>Attack test written by the AI</h2><pre>def test_path_traversal_blocked(self):
+       payloads = [&quot;../secret.txt&quot;, &quot;../../secret.txt&quot;, &quot;..\\..\\secret.txt&quot;]  # maybe just one type
+       for payload in payloads:
+           with self.subTest(payload=payload):
+               with self.assertRaises((FileNotFoundError, ValueError, ...)) as cm:
+                   read_attachment(self.base, payload)
+</pre><h2>Patch</h2><p class=mut>No patch was produced in this run.</p>
