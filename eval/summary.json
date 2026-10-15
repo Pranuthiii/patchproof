@@ -1,0 +1,258 @@
+{
+ "baseline": {
+  "case01_sqli|lightning": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 6362
+  },
+  "case01_sqli|nano": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 2919
+  },
+  "case01_sqli|super": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 2436
+  },
+  "case01_sqli|ultra": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 2703
+  },
+  "case02_path_traversal|lightning": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 9723
+  },
+  "case02_path_traversal|nano": {
+   "n": 5,
+   "ok": 4,
+   "ff": 0,
+   "tokens": 4040
+  },
+  "case02_path_traversal|super": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 3219
+  },
+  "case02_path_traversal|ultra": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 2844
+  },
+  "case03_prefix_traversal|lightning": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 8586
+  },
+  "case03_prefix_traversal|nano": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 3604
+  },
+  "case03_prefix_traversal|super": {
+   "n": 5,
+   "ok": 4,
+   "ff": 1,
+   "tokens": 3201
+  },
+  "case03_prefix_traversal|ultra": {
+   "n": 5,
+   "ok": 4,
+   "ff": 1,
+   "tokens": 2152
+  },
+  "case04_orderby_injection|lightning": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 7507
+  },
+  "case04_orderby_injection|nano": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 3813
+  },
+  "case04_orderby_injection|super": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 3183
+  },
+  "case04_orderby_injection|ultra": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 2950
+  },
+  "case05_command_injection|lightning": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 5779
+  },
+  "case05_command_injection|nano": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 2709
+  },
+  "case05_command_injection|super": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 2498
+  },
+  "case05_command_injection|ultra": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 3594
+  },
+  "case06_unsafe_eval|lightning": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 5264
+  },
+  "case06_unsafe_eval|nano": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 2886
+  },
+  "case06_unsafe_eval|super": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 2575
+  },
+  "case06_unsafe_eval|ultra": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 1669
+  },
+  "case08_open_redirect|lightning": {
+   "n": 5,
+   "ok": 0,
+   "ff": 5,
+   "tokens": 8081
+  },
+  "case08_open_redirect|nano": {
+   "n": 5,
+   "ok": 0,
+   "ff": 5,
+   "tokens": 3379
+  },
+  "case08_open_redirect|super": {
+   "n": 5,
+   "ok": 0,
+   "ff": 5,
+   "tokens": 2657
+  },
+  "case08_open_redirect|ultra": {
+   "n": 5,
+   "ok": 0,
+   "ff": 5,
+   "tokens": 5062
+  },
+  "case07_html_escape|lightning": {
+   "n": 5,
+   "ok": 1,
+   "ff": 4,
+   "tokens": 12906
+  },
+  "case07_html_escape|nano": {
+   "n": 5,
+   "ok": 0,
+   "ff": 5,
+   "tokens": 4746
+  },
+  "case07_html_escape|super": {
+   "n": 5,
+   "ok": 3,
+   "ff": 2,
+   "tokens": 5198
+  },
+  "case07_html_escape|ultra": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 3194
+  }
+ },
+ "loop": {
+  "case01_sqli|super": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 11466
+  },
+  "case01_sqli|ultra": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 13979
+  },
+  "case03_prefix_traversal|super": {
+   "n": 5,
+   "ok": 4,
+   "ff": 1,
+   "tokens": 23299
+  },
+  "case03_prefix_traversal|ultra": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 22907
+  },
+  "case05_command_injection|super": {
+   "n": 5,
+   "ok": 3,
+   "ff": 0,
+   "tokens": 43720
+  },
+  "case05_command_injection|ultra": {
+   "n": 5,
+   "ok": 5,
+   "ff": 0,
+   "tokens": 28174
+  },
+  "case07_html_escape|super": {
+   "n": 5,
+   "ok": 2,
+   "ff": 3,
+   "tokens": 27622
+  },
+  "case07_html_escape|ultra": {
+   "n": 5,
+   "ok": 3,
+   "ff": 0,
+   "tokens": 97862
+  },
+  "case08_open_redirect|super": {
+   "n": 5,
+   "ok": 0,
+   "ff": 5,
+   "tokens": 23758
+  },
+  "case08_open_redirect|ultra": {
+   "n": 5,
+   "ok": 1,
+   "ff": 4,
+   "tokens": 42503
+  }
+ }
+}
