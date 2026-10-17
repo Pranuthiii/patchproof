@@ -1,0 +1,143 @@
+<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>03 Prefix path traversal | PatchProof</title><style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+:root{--bg:#f4f1ea;--paper:#fffdf8;--ink:#17181c;--mut:#5f6470;--line:#e2ddd0;--brand:#1f4fd8;--ok:#0b7a3b;--bad:#c4161c;--warn:#9a6700;--code:#f3efe4;--add:#dff3e4;--del:#fbe3e1;--shadow:0 1px 0 rgba(0,0,0,.04),0 12px 32px rgba(40,30,10,.10)}
+@media (prefers-color-scheme:dark){:root{--bg:#0c0f14;--paper:#161a22;--ink:#eceff4;--mut:#9aa3b2;--line:#262d3a;--brand:#7ea2ff;--ok:#43c46a;--bad:#ff6b6b;--warn:#e0a526;--code:#0f1319;--add:#12311f;--del:#3b171b;--shadow:0 12px 32px rgba(0,0,0,.4)}}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+a{color:var(--brand);text-decoration:none}
+a:hover{text-decoration:underline}
+nav{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;justify-content:space-between;height:58px;gap:12px}
+.brand{font-weight:800;font-size:18px;color:var(--ink);letter-spacing:-.01em}
+.brand:hover{text-decoration:none}
+.links{display:flex;gap:18px;font-size:14px;flex-wrap:wrap}
+.links a{color:var(--mut)}
+.links a:hover{color:var(--ink);text-decoration:none}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:center;padding:64px 0 28px}
+.eyebrow{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--brand);margin:0 0 12px}
+h1{font-size:clamp(36px,6vw,58px);line-height:1.04;margin:0 0 18px;letter-spacing:-.025em}
+h2{font-size:28px;margin:0 0 6px;letter-spacing:-.015em}
+h3{font-size:17px;margin:0 0 6px}
+.lead{font-size:19px;color:var(--mut);margin:0 0 26px;max-width:620px}
+.mut{color:var(--mut)}
+.cta{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-block;padding:11px 20px;border-radius:10px;font-weight:700;font-size:15px;border:1px solid var(--ink);color:var(--ink)}
+.btn.primary{background:var(--ink);color:var(--bg)}
+.btn:hover{text-decoration:none;opacity:.88}
+section{margin:72px 0}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:30px 0 0}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow);color:var(--ink)}
+.stat .num{font-size:32px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.stat .cap{font-size:14px;color:var(--mut);margin-top:6px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px;margin-top:16px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px;margin-top:16px}
+.card p{margin:0;font-size:15px;color:var(--mut)}
+.callout{border:1px solid var(--line);border-left:4px solid var(--brand);background:var(--paper);border-radius:10px;padding:14px 18px;margin-top:14px;font-size:15px}
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:18px;padding:0;list-style:none;counter-reset:s}
+.node{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow);counter-increment:s}
+.node::before{content:counter(s);display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--brand);color:var(--bg);font-weight:800;font-size:14px;margin-bottom:8px}
+.node:not(:last-child)::after{content:"\2192";position:absolute;right:-15px;top:50%;transform:translateY(-50%);color:var(--mut);font-size:18px}
+.node p{margin:0;font-size:13.5px;color:var(--mut)}
+.node h3{font-size:15px}
+.receipt{background:var(--paper);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px;padding:22px 22px 26px;border-radius:6px;box-shadow:var(--shadow);max-width:390px;margin:0 auto;transform:rotate(1.2deg);border-bottom:3px dashed var(--line)}
+.rh{font-weight:800;letter-spacing:.14em;text-align:center}
+.rs{text-align:center;color:var(--mut);font-size:12.5px;margin-top:4px}
+.rule{border-top:2px dashed var(--line);margin:14px 0}
+.line{display:flex;align-items:baseline;gap:6px;margin:6px 0}
+.line i{flex:1;border-bottom:2px dotted var(--mut);opacity:.45;transform:translateY(-3px)}
+.note{font-size:12.5px;color:var(--mut);margin:-2px 0 6px 12px}
+.verdict{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.foot{margin-top:14px;font-size:11.5px;color:var(--mut);text-align:center}
+.stamp{display:inline-block;border:3px solid currentColor;border-radius:6px;padding:2px 10px;font-weight:800;letter-spacing:.06em;transform:rotate(-6deg);text-transform:uppercase}
+.tabs{display:flex;gap:8px;justify-content:center;margin:0 0 18px}
+.tabs button{font:inherit;font-size:13px;font-weight:700;padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--mut);cursor:pointer}
+.tabs button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--warn)}
+.badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid currentColor;margin-right:8px}
+.ledgerwrap{overflow-x:auto}
+.ledger{border-collapse:separate;border-spacing:6px;width:100%}
+.ledger th{font-size:13px;color:var(--mut);font-weight:600}
+.ledger th[scope=row]{text-align:left;color:var(--ink);white-space:nowrap;font-size:14px}
+.cell{background:hsl(var(--r) 52% 36%);color:#fff;border-radius:8px;text-align:center;padding:10px 4px;min-width:84px;line-height:1.25}
+.cell b{font-size:15px}
+.cell small{display:block;font-size:11px;opacity:.92}
+.none{text-align:center;color:var(--mut)}
+.legend{font-size:13px;color:var(--mut);margin-top:10px}
+.bar2{display:grid;grid-template-columns:200px 1fr;gap:6px 18px;align-items:start;margin:20px 0}
+.track{position:relative;height:30px;background:var(--code);border-radius:8px;overflow:hidden}
+.fill{position:absolute;left:0;top:0;bottom:0;background:var(--brand);opacity:.85}
+.whisk{position:absolute;top:50%;height:4px;margin-top:-2px;background:var(--ink);border-radius:2px}
+.bt{font-size:13px;color:var(--mut);margin-top:6px}
+.feat{display:block;transition:transform .12s,border-color .12s}
+.feat:hover{transform:translateY(-3px);border-color:var(--brand);text-decoration:none}
+.feat h3{margin-top:10px}
+.feat p{margin:6px 0 12px}
+.more{font-size:14px;font-weight:700;color:var(--brand)}
+.hood{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-top:16px}
+ul.tight{margin:10px 0 0;padding-left:20px}
+ul.tight li{margin:6px 0;color:var(--mut);font-size:15px}
+pre{background:var(--code);border:1px solid var(--line);padding:14px;overflow-x:auto;border-radius:10px;font-size:13px;line-height:1.5}
+.add{background:var(--add)}.del{background:var(--del)}
+.detail h1{font-size:34px;margin-top:6px}
+footer{border-top:1px solid var(--line);margin-top:80px;padding:30px 0;color:var(--mut);font-size:14px}
+@media (max-width:900px){
+.hero{grid-template-columns:1fr;gap:34px;padding-top:36px}
+.flow{grid-template-columns:1fr}
+.node:not(:last-child)::after{display:none}
+.bar2{grid-template-columns:1fr}
+.receipt{transform:none}
+}
+</style></head><body id='top'><nav><div class='wrap bar'><a class='brand' href='../../../../../index.html'>PatchProof</a><div class='links'><a href='../../../../../index.html#findings'>Findings</a><a href='../../../../../index.html#how'>How it works</a><a href='../../../../../index.html#ledger'>Ledger</a><a href='../../../../../index.html#receipts'>Receipts</a><a href='../../../../../index.html#hood'>Under the hood</a><a href='https://github.com/Pranuthiii/patchproof'>GitHub</a></div></div></nav><main class='wrap'><div class='detail'><p style='margin-top:28px'><a href='../../../../../index.html'>&larr; All results</a></p><h1>03 Prefix path traversal</h1><p><span class='badge bad'>False fix</span><span class='mut'>Super &middot; run 2 &middot; AI test + patch &middot; 2761 tokens &middot; 13s</span></p><div class='callout'>The patch uses a plain startswith check, so a sibling folder such as files_private still passes. The AI&#x27;s own test only tried ../secret.txt, so it passed, but the hidden oracle failed the patch.</div><h2 style='margin-top:30px'>Attack test written by the AI</h2><pre>import os
+import tempfile
+import unittest
+from app import read_attachment
+
+
+class TestReadAttachment(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.base = os.path.join(self.tmp.name, &quot;files&quot;)
+        os.makedirs(os.path.join(self.base, &quot;sub&quot;))
+        with open(os.path.join(self.base, &quot;a.txt&quot;), &quot;w&quot;) as f:
+            f.write(&quot;alpha&quot;)
+        with open(os.path.join(self.base, &quot;sub&quot;, &quot;b.txt&quot;), &quot;w&quot;) as f:
+            f.write(&quot;beta&quot;)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_reads_top_level_file(self):
+        self.assertEqual(read_attachment(self.base, &quot;a.txt&quot;), &quot;alpha&quot;)
+
+    def test_reads_file_in_subfolder(self):
+        self.assertEqual(
+            read_attachment(self.base, os.path.join(&quot;sub&quot;, &quot;b.txt&quot;)), &quot;beta&quot;
+        )
+
+    def test_missing_file_raises_file_not_found(self):
+        with self.assertRaises(FileNotFoundError):
+            read_attachment(self.base, &quot;missing.txt&quot;)
+
+    def test_path_traversal_is_blocked(self):
+        # Create a file outside the allowed base directory
+        secret_path = os.path.join(self.tmp.name, &quot;secret.txt&quot;)
+        with open(secret_path, &quot;w&quot;) as f:
+            f.write(&quot;should-not-be-readable&quot;)
+        # Using a relative path that traverses out of base_dir
+        malicious_filename = os.path.pardir + os.sep + &quot;secret.txt&quot;
+        # The function should raise an exception (any) when trying to read outside base_dir
+        with self.assertRaises(Exception):
+            read_attachment(self.base, malicious_filename)
+
+
+if __name__ == &quot;__main__&quot;:
+    unittest.main()
+</pre><h2 style='margin-top:30px'>Patch</h2><pre><div class=''>--- vulnerable app.py</div><div class=''>+++ patched app.py</div><div class=''>@@ -2,7 +2,13 @@</div><div class=''> </div><div class=''> </div><div class=''> def read_attachment(base_dir, filename):</div><div class='del'>-    # VULNERABLE: filename is joined to base_dir without any checks</div><div class='del'>-    path = os.path.join(base_dir, filename)</div><div class='del'>-    with open(path) as f:</div><div class='add'>+    # Resolve base directory to an absolute path</div><div class='add'>+    base_dir = os.path.abspath(base_dir)</div><div class='add'>+    # Construct the requested path and resolve it to an absolute path</div><div class='add'>+    requested_path = os.path.abspath(os.path.join(base_dir, filename))</div><div class='add'>+    # Ensure the requested path is within the base directory</div><div class='add'>+    if not requested_path.startswith(base_dir):</div><div class='add'>+        raise ValueError(&quot;Path traversal attempt detected&quot;)</div><div class='add'>+    # Open and read the file</div><div class='add'>+    with open(requested_path) as f:</div><div class=''>         return f.read()</div></pre></div></main><footer><div class='wrap'>PatchProof &middot; built for the Nebius x NVIDIA Global AI Hackathon (Coding and Agentic Engineering). NVIDIA Nemotron models served through Nebius Token Factory, plus Tavily web search. MIT licensed. <a href='https://github.com/Pranuthiii/patchproof'>Source code</a></div></footer><script>
+document.querySelectorAll('[data-tab]').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('[data-tab]').forEach(function(x){x.classList.toggle('on',x===b)});
+    document.querySelectorAll('[data-pane]').forEach(function(p){p.hidden=p.getAttribute('data-pane')!==b.getAttribute('data-tab')});
+  });
+});
+</script></body></html>
