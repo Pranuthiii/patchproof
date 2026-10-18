@@ -41,15 +41,15 @@ def wilson(k, n, z=1.96):
 base_rows = [r for r in load("eval/results_baseline.jsonl") if r["case"] != "case07_html_escape"]
 base_rows += load("eval/results_baseline_case07_v2.jsonl")
 B = cells(base_rows)
-L = cells(load("eval/results_loop_main.jsonl"))
+L = cells(load("eval/results_loop_full.jsonl"))
 
-CASES = ["case01_sqli", "case03_prefix_traversal", "case05_command_injection",
-         "case07_html_escape", "case08_open_redirect"]
-MODELS = ["super", "ultra"]
+CASES = ["case01_sqli", "case02_path_traversal", "case03_prefix_traversal", "case04_orderby_injection",
+         "case05_command_injection", "case06_unsafe_eval", "case07_html_escape", "case08_open_redirect"]
+MODELS = ["lightning", "nano", "super", "ultra"]
 lines = ["# PatchProof results", "",
          "First 5 runs per cell, temperature 0.7, infrastructure errors excluded. "
          "Small samples: treat differences of one or two runs as noise.", "",
-         "## Baseline vs loop agent (Super and Ultra, 5 cases)", "",
+         "## Baseline vs loop agent (4 models, 8 cases)", "",
          "| case | model | baseline verified | baseline false fixes | loop verified | loop false fixes |",
          "|---|---|---|---|---|---|"]
 tot = {"b": [0, 0, 0, 0], "l": [0, 0, 0, 0]}
