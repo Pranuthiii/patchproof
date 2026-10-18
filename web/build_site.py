@@ -306,7 +306,7 @@ def index_page(st):
     if overlap:
         loop_title = "An AI-written test and retries did not measurably help"
         loop_text = (f"{names} on {len(lc)} cases: {st['lok']}/{st['ln']} verified with the loop against "
-                     f"{st['bok']}/{st['bn']} one-shot. The 95% intervals overlap, at about {st['ratio']:.0f}x the tokens.")
+                     f"{st['bok']}/{st['bn']} one-shot. The 95% intervals overlap slightly, so we cannot call it worse, but it was not better, at about {st['ratio']:.0f}x the tokens.")
     else:
         more = st["lok"] / max(st["ln"], 1) > st["bok"] / max(st["bn"], 1)
         loop_title = "The retry loop verified " + ("more" if more else "fewer") + " patches"
