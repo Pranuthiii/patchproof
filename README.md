@@ -10,7 +10,7 @@ Built for the Nebius x NVIDIA Global AI Hackathon, Coding and Agentic Engineerin
 
 - **One-shot fixes pass easy cases and fail subtle ones.** Four models patched code in a single call with no test. On five common flaw types, 99 of 100 patches were verified. On open redirect, all 20 patches passed the existing tests and failed the hidden oracle test.
 - **A hidden oracle catches what ordinary tests miss.** On the prefix-traversal, HTML-escaping and open-redirect cases it flagged patches that looked correct and were not.
-- **An AI-written test with retries did not measurably help.** Super and Ultra on five cases, five runs each: 33/50 verified with the loop against 36/50 one-shot, with overlapping 95% intervals, at about ten times the tokens. *(This paragraph reflects the first loop batch and may be updated with the full grid.)*
+- **An AI-written test with retries did not help.** Across all four models and eight cases, five runs each: 112/160 verified with the loop against 126/160 one-shot (95% intervals 62% to 77% and 72% to 84%), at about 12 times the tokens. The loop's losses were mostly runs with no usable output, such as truncated replies and rejected tests, and not wrong patches.
 - **Why:** the AI-written attack tests cover attacks the model already knows. The open-redirect tests we inspected did not include the `///evil.test` form the oracle uses.
 
 Full tables: [eval/summary.md](eval/summary.md). Raw per-run results: [eval/](eval/).
