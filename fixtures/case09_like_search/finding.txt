@@ -1,0 +1,1 @@
+SQL injection in search_users() in app.py: the term argument is concatenated into the SQL query text inside the LIKE pattern.
