@@ -1,0 +1,1 @@
+Path traversal in extract_zip() in app.py: each archive entry name is joined to dest_dir without validation, so a crafted entry can write files outside dest_dir.
