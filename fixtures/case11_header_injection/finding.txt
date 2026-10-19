@@ -1,0 +1,1 @@
+HTTP header injection in build_redirect_response() in app.py: the location and cookie_value arguments are placed into raw header lines without validation, so a value containing line breaks can add headers or a body to the response.
