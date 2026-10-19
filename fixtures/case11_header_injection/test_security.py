@@ -1,13 +1,22 @@
+import re
 import unittest
 from app import build_redirect_response
 
 
 def parse(raw):
-    head, sep, body = raw.partition("\r\n\r\n")
-    lines = head.split("\r\n")
-    names = [l.split(":", 1)[0].strip().lower() for l in lines[1:] if ":" in l]
-    bad_lines = [l for l in lines[1:] if ":" not in l]
-    return names, bad_lines, body
+    lines = re.split(r"\r\n|\r|\n", raw)
+    rest = lines[1:]
+    headers, body, in_body = [], [], False
+    for line in rest:
+        if in_body:
+            body.append(line)
+        elif line == "":
+            in_body = True
+        else:
+            headers.append(line)
+    names = [h.split(":", 1)[0].strip().lower() for h in headers if ":" in h]
+    bad_lines = [h for h in headers if ":" not in h]
+    return names, bad_lines, "".join(body)
 
 
 class TestHeaderInjection(unittest.TestCase):
