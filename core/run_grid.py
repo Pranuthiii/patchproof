@@ -61,7 +61,8 @@ def run_one(case, model, idx):
             shutil.rmtree(dst)
         shutil.copytree(src, dst)
     rec = {"case": case, "model": model, "run": idx, "outcome": outcome,
-           "tokens": tokens, "seconds": round(time.time() - t0)}
+           "tokens": tokens, "seconds": round(time.time() - t0),
+           "tier": (re.findall(r"TIER: (\w+)", out) or [""])[-1]}
     with RESULTS.open("a") as f:
         f.write(json.dumps(rec) + "\n")
     return rec
