@@ -18,7 +18,7 @@ GRID_DIR = Path(os.environ.get("PATCHPROOF_GRIDDIR", "runs/grid"))
 
 
 def classify(out):
-    if "SandboxError" in out:
+    if "SandboxError" in out or "APIConnectionError" in out or "APITimeoutError" in out:
         return "infra_error"
     if "TRUNCATED" in out:
         return "truncated"
