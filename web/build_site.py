@@ -363,6 +363,7 @@ def index_page(st):
         "Ultra was available when its runs were made but was no longer listed on the account when checked on Oct 13, 2026.",
         "The early experiments used the API's default temperature, where Super sometimes returned identical replies. The main evaluation used temperature 0.7.",
         "Truncated means the model hit the 16,000-token output limit set by the test harness.",
+        "The attack-variant library was written after we had seen the oracles for cases 01 to 08, so only cases 09 to 11 test it fairly. The hybrid agent was designed after all 11 cases had been seen.",
         "This page shows recorded runs. The agent itself runs locally with Docker.",
     ]
     limits_html = "<ul class='tight'>" + "".join(f"<li>{esc(x)}</li>" for x in limits) + "</ul>"
@@ -391,13 +392,74 @@ def index_page(st):
         f"<div class='card'>{ledger_html()}</div>"
         f"<h2 style='margin-top:40px'>Does the retry loop help?</h2>"
         f"<p class='mut'>The black line is the 95% interval. Overlapping lines mean this data cannot separate the two.</p>"
-        f"<div class='card'>{compare_html(st)}</div></section>"
+        f"<div class='card'>{compare_html(st)}</div>" + attempts_html() + "</section>"
         f"<section id='receipts'><h2>Receipts</h2><p class='mut'>Real runs, saved as recorded. Open one to see the "
         f"AI's test and the patch.</p><div class='grid2'>{featured_cards()}</div></section>"
         f"<section id='hood'><h2>Under the hood</h2><div class='hood'>{hood_html}</div></section>"
         f"<section id='limits'><h2>Limits</h2>{limits_html}</section>"
     )
     return page("PatchProof: AI fixes that show their receipts", body, 0)
+
+
+def _first(rows, n):
+    g = {}
+    for r in sorted(rows, key=lambda r: r["run"]):
+        g.setdefault((r["case"], r["model"]), []).append(r)
+    out = []
+    for v in g.values():
+        out += [r for r in v[:n] if r["outcome"] != "infra_error"]
+    return out
+
+
+def _tally(rows, cases=None):
+    sel = [r for r in rows if cases is None or r["case"] in cases]
+    return (sum(r["outcome"] == "verified" for r in sel), len(sel),
+            sum(r["outcome"] == "false_fix" for r in sel), sum(r["tokens"] for r in sel))
+
+
+def _row(label, t):
+    ok, n, ff, tk = t
+    lo, hi = wilson(ok, n)
+    return ("<tr><td>" + esc(label) + "</td><td>" + f"{ok}/{n} ({100 * ok / max(n, 1):.0f}%)" + "</td><td>"
+            + f"{100 * lo:.0f}% to {100 * hi:.0f}%" + "</td><td>" + str(ff) + "</td><td>"
+            + str(tk // max(n, 1)) + "</td></tr>")
+
+
+def attempts_html():
+    hb = _first(jl("eval/heldout_baseline.jsonl"), 10)
+    hl = _first(jl("eval/heldout_loop.jsonl"), 10)
+    hs = _first(jl("eval/heldout_seeded.jsonl"), 10)
+    base = [r for r in jl("eval/results_baseline.jsonl") if r["case"] != "case07_html_escape"]
+    base += jl("eval/results_baseline_case07_v2.jsonl") + jl("eval/heldout_baseline.jsonl")
+    base = _first(base, 5)
+    hyb = _first(jl("eval/results_hybrid.jsonl"), 5)
+    if not (hb and hl and hs and hyb):
+        return ""
+    c2 = {"case09_like_search", "case10_zip_extract"}
+    tiers = {}
+    for r in hyb:
+        a = tiers.setdefault(r.get("tier") or "none", [0, 0])
+        a[0] += 1
+        a[1] += r["outcome"] == "verified"
+    tier_txt = ", ".join(t + ": " + str(v[1]) + "/" + str(v[0]) for t, v in sorted(tiers.items()))
+    head = ("<tr><th align='left'>agent</th><th align='left'>verified</th><th align='left'>95% interval</th>"
+            "<th align='left'>false fixes</th><th align='left'>tokens per run</th></tr>")
+    t1 = (head + _row("One-shot fix", _tally(hb, c2)) + _row("AI test + retries", _tally(hl, c2))
+          + _row("AI test + retries + attack-variant library", _tally(hs, c2)))
+    t2 = head + _row("One-shot fix", _tally(base)) + _row("Hybrid: one-shot patch, AI test as extra evidence", _tally(hyb))
+    style = "style='width:100%;border-collapse:collapse;font-size:14px;margin-top:10px'"
+    return ("<h2 style='margin-top:40px'>We tried to rescue the loop</h2>"
+            "<p class='mut'>Two more designs, tried after the first results. Neither beat a single call.</p>"
+            "<div class='card scroll'><h3>Attack-variant library, on held-out cases 09 and 10</h3>"
+            "<p>Cases 09 to 11 were built after the library was written, so they are an independent test of it. "
+            "Lightning was truncated on every library run, which explains much of the gap.</p>"
+            "<table " + style + ">" + t1 + "</table></div>"
+            "<div class='card scroll' style='margin-top:14px'><h3>Hybrid agent, all 11 cases</h3>"
+            "<p>The hybrid keeps the one-shot patch and uses an AI-written test only as extra evidence. "
+            "It was designed after all 11 cases had been seen, so this is a development result.</p>"
+            "<table " + style + ">" + t2 + "</table>"
+            "<p class='bt'>Runs labelled verified by the AI test that also passed the hidden oracle, by label "
+            "(passed/runs): " + esc(tier_txt) + ". The label did not predict correctness, so we dropped it.</p></div>")
 
 
 def find_run(c):
